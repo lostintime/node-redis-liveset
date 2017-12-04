@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "module": "commonjs",
+    "outDir": "dist",
+    "noImplicitAny": false,
+    "strict": true,
+    "strictNullChecks": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitUseStrict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmitOnError": true,
+    "noImplicitReturns": true,
+    "strictFunctionTypes": true,
+    "sourceMap": true,
+    "declaration": true,
+    "allowJs": false
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

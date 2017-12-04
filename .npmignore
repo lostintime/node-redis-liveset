@@ -1,0 +1,9 @@
+.idea
+.git/
+*.iml
+.gitignore
+.npmignore
+node_modules/
+tsconfig.json
+dist/test/
+TODO.md
