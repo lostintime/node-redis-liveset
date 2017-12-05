@@ -1,7 +1,8 @@
 Redis LiveSet
 =============
 
-A type-safe [Redis Set](https://redis.io/topics/data-types#sets) Wrapper to keep in _eventual_ sync a Set of values across multiple nodes.
+A type-safe [Redis Set](https://redis.io/topics/data-types#sets) wrapper 
+to keep a Set _eventually_ synchronized across multiple nodes.
 
 
 ## Installation
