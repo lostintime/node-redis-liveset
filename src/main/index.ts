@@ -18,7 +18,7 @@
 import * as redis from "redis"
 import { hasFields, isNumber, isString, isValue, TypeMatcher, isArrayOf } from "typematcher"
 import { AnyAction, createStore, Store } from "redux"
-import { Set } from "immutable"
+import { Set, update } from "immutable"
 import { Add, AddAll, apply, Clear, isLiveSetOp, LiveSetOp, Remove, ReplaceAll } from "./operations"
 import { createLiveStore } from "./store"
 
@@ -109,6 +109,20 @@ export function createLiveSet<T>(key: string,
                                  sub: redis.RedisClient,
                                  updatesChan: string = key): RedisLiveSet<T> {
   return new RedisLiveSet(key, typeMatcher, pub, sub, updatesChan)
+}
+
+/**
+ * createLiveSet shorthand for strings
+ */
+export function createStringsLiveSet(key: string, pub: redis.RedisClient, sub: redis.RedisClient, updatesChan: string = key): RedisLiveSet<string> {
+  return createLiveSet(key, isString, pub, sub, updatesChan)
+}
+
+/**
+ * createLiveSet shorthand for numbers
+ */
+export function createNumbersLiveSet(key: string, pub: redis.RedisClient, sub: redis.RedisClient, updatesChan: string = key): RedisLiveSet<number> {
+  return createLiveSet(key, isNumber, pub, sub, updatesChan)
 }
 
 export default createLiveSet
