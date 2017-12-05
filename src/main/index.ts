@@ -18,7 +18,7 @@
 import * as redis from "redis"
 import { hasFields, isNumber, isString, isValue, TypeMatcher, isArrayOf } from "typematcher"
 import { AnyAction, createStore, Store } from "redux"
-import { Set, update } from "immutable"
+import { Set } from "immutable"
 import { Add, AddAll, apply, Clear, isLiveSetOp, LiveSetOp, Remove, ReplaceAll } from "./operations"
 import { createLiveStore } from "./store"
 

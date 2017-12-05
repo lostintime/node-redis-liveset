@@ -1,7 +1,7 @@
 {
   "name": "redis-liveset",
   "author": "lostintime <lostintime.dev@gmail.com>",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "Apache-2.0",
   "description": "Redis LiveSet - a wrapper arround Redis Set with realtime notifications",
   "main": "dist/index.js",
@@ -25,7 +25,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "immutable": "^4.0.0-rc.9",
+    "immutable": "^3.8.2",
     "redis": "^2.8.0",
     "redux": "^3.7.2",
     "typematcher": "^0.4.1"

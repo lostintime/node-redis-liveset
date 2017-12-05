@@ -171,7 +171,7 @@ export function createLiveStore<T>(key: string,
         return s
       }),
       caseDefault(() => s) // unknown action, ignore
-    ), Set())
+    ), Set<T>())
 
   let isLoadingSeed = false
   let fanInBuffer: LiveSetOp<T>[] = []
