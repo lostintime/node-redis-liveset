@@ -80,8 +80,15 @@ export class RedisLiveSet<T> {
    * @param {(s: Set<T>) => void} cb
    */
   subscribe(cb: (s: Set<T>) => void): void {
+    let lastSet: Set<T> | null = null
     this._store.subscribe(() => {
-      cb(this._store.getState())
+      const newSet = this._store.getState()
+
+      if (lastSet === null || !lastSet.equals(newSet)) {
+        cb(this._store.getState())
+      }
+
+      lastSet = newSet
     })
   }
 }
