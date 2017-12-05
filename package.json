@@ -26,7 +26,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "funfix": "^6.2.2",
     "immutable": "^4.0.0-rc.9",
     "redis": "^2.8.0",
     "redux": "^3.7.2",
