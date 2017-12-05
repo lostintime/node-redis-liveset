@@ -6,7 +6,7 @@ A type-safe Redis wrapper to keep a [Set](https://redis.io/topics/data-types#set
 
 ## Installation
 
-```$bash
+```bash
 npm install --save redis-liveset
 ```
 
@@ -14,7 +14,7 @@ npm install --save redis-liveset
 
 Listening for updates
 
-```$typescript
+```typescript
 import { createNumbersLiveSet } from "redis-liveset"
 import * as redis from "redis"
 import { Set } from "immutable"
@@ -31,7 +31,7 @@ liveSet.subscribe((s: Set<number>) => {
 
 Changing Set
 
-```$typescript
+```typescript
 import { createNumbersLiveSet } from "redis-liveset"
 import * as redis from "redis"
 
