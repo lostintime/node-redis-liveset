@@ -32,7 +32,7 @@ liveSet.subscribe((s: Set<number>) => {
 Changing Set
 
 ```$typescript
-import { createNumbersLiveSet } from "./index"
+import { createNumbersLiveSet } from "redis-liveset"
 import * as redis from "redis"
 
 const sub = redis.createClient()
