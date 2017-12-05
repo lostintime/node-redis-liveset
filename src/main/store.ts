@@ -16,7 +16,10 @@
  */
 import { apply, isLiveSetOp, LiveSetOp, ReplaceAll } from "./operations"
 import * as redis from "redis"
-import { caseWhen, hasFields, isArrayOf, isString, isValue, matchWith, TypeMatcher } from "typematcher"
+import {
+  caseDefault, caseWhen, hasFields, isArrayOf, isString, isValue, match, matchWith,
+  TypeMatcher
+} from "typematcher"
 import { Set } from "immutable"
 import { AnyAction, createStore, Store } from "redux"
 
@@ -153,21 +156,22 @@ export function createLiveStore<T>(key: string,
     }
   }
 
-  const store = createStore((s: Set<T>, action): Set<T> => {
-    const op = action.type
-    if (isOp(op)) { // Set operation, to be sent to server
-      fanOut(op) // notify others
-      return apply(s, op)
-    } else if (isFanIn(op)) { // FanIn operation, may be applied directly
-      return apply(s, op.value)
-    } else if (isFanOut(op)) { // FanOut operation, notifying others
-      fanOut(op.value)
-      return s
-    }
-
-    // unknown action, ignore
-    return s
-  }, Set())
+  const store = createStore((s: Set<T>, action): Set<T> =>
+    match(action.type)(
+      caseWhen(isOp)(op => {
+        const newS = apply(s, op) // apply updates locally
+        fanOut(op) // send updates to server
+        return newS
+      }),
+      caseWhen(isFanIn)(op =>
+        apply(s, op.value) // FanIn - apply remote operations locally
+      ),
+      caseWhen(isFanOut)(op => {
+        fanOut(op.value) // FanOut - send local operations to remotes
+        return s
+      }),
+      caseDefault(() => s) // unknown action, ignore
+    ), Set())
 
   let isLoadingSeed = false
   let fanInBuffer: LiveSetOp<T>[] = []
