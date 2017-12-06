@@ -18,7 +18,7 @@
 import * as redis from "redis"
 import { hasFields, isNumber, isString, isValue, TypeMatcher, isArrayOf } from "typematcher"
 import { AnyAction, createStore, Store } from "redux"
-import { Set } from "immutable"
+import { List, Set } from "immutable"
 import { Add, AddAll, apply, Clear, isLiveSetOp, LiveSetOp, Remove, ReplaceAll } from "./operations"
 import { createLiveStore } from "./store"
 
@@ -26,14 +26,43 @@ import { createLiveStore } from "./store"
  * Redis LiveSet wrapper
  */
 export class RedisLiveSet<T> {
+  /**
+   * LiveSet redux store
+   */
   private _store: Store<Set<T>>
+
+  /**
+   * List of callbacks to be called once members loaded from db
+   */
+  private _membersInitCallbacks: List<(s: Set<T>) => void>
+
+  /**
+   * Will be set to true once members loaded from db
+   * Callbacks attached later - will be called immediately
+   */
+  private _membersInitDone: boolean = false
 
   constructor(key: string,
               typeMatcher: TypeMatcher<T>,
               pub: redis.RedisClient,
               sub: redis.RedisClient,
               updatesChan: string = key) {
-    this._store = createLiveStore(key, typeMatcher, pub, sub, updatesChan)
+    this._membersInitCallbacks = List()
+    const onMembersLoaded = () => {
+      // run only once
+      if (!this._membersInitDone) {
+        this._membersInitDone = true
+        const s = this._store.getState()
+        this._membersInitCallbacks.forEach((cb) => {
+          if (cb) { // this is fixed in v4, until then - checking cb to satisfy compiler
+            cb(s)
+          }
+        })
+        this._membersInitCallbacks = List() // can now GC listeners
+      }
+    }
+
+    this._store = createLiveStore(key, typeMatcher, pub, sub, updatesChan, onMembersLoaded)
   }
 
   /**
@@ -90,6 +119,17 @@ export class RedisLiveSet<T> {
 
       lastSet = newSet
     })
+  }
+
+  /**
+   * Add a callback to be called once, when members loaded from Redis
+   */
+  onMembersInit(cb: (s: Set<T>) => void): void {
+    if (this._membersInitDone) {
+      cb(this._store.getState())
+    } else {
+      this._membersInitCallbacks = this._membersInitCallbacks.push(cb)
+    }
   }
 }
 

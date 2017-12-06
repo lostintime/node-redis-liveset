@@ -86,7 +86,8 @@ export function createLiveStore<T>(key: string,
                                    typeMatcher: TypeMatcher<T>,
                                    pub: redis.RedisClient,
                                    sub: redis.RedisClient,
-                                   updatesChan: string = key): Store<Set<T>> {
+                                   updatesChan: string = key,
+                                   onMembersLoaded?: () => void): Store<Set<T>> {
   const isOp: (value: any) => value is LiveSetOp<T> = isLiveSetOp(typeMatcher)
   const isFanOut: (value: any) => value is FanDir.FanOut<LiveSetOp<T>> = FanDir.isFanOut(isOp)
   const isFanIn: (value: any) => value is FanDir.FanIn<LiveSetOp<T>> = FanDir.isFanIn(isOp)
@@ -210,6 +211,9 @@ export function createLiveStore<T>(key: string,
         }
         flushFanInBuffer()
         isLoadingSeed = false
+        if (onMembersLoaded) {
+          onMembersLoaded()
+        }
       })
     }
   })
