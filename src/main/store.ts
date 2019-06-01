@@ -157,21 +157,21 @@ export function createLiveStore<T>(key: string,
     }
   }
 
-  const store = createStore((s: Set<T>, action): Set<T> =>
+  const store = createStore((s: Set<T> | undefined, action): Set<T> =>
     match(action.type)(
       caseWhen(isOp)(op => {
-        const newS = apply(s, op) // apply updates locally
+        const newS = apply(s !== undefined ? s : Set<T>(), op) // apply updates locally
         fanOut(op) // send updates to server
         return newS
       }),
       caseWhen(isFanIn)(op =>
-        apply(s, op.value) // FanIn - apply remote operations locally
+        apply(s !== undefined ? s : Set(), op.value) // FanIn - apply remote operations locally
       ),
       caseWhen(isFanOut)(op => {
         fanOut(op.value) // FanOut - send local operations to remotes
-        return s
+        return s !== undefined ? s : Set()
       }),
-      caseDefault(() => s) // unknown action, ignore
+      caseDefault(() => s !== undefined ? s : Set()) // unknown action, ignore
     ), Set<T>())
 
   let isLoadingSeed = false
