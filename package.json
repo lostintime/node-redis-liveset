@@ -1,7 +1,7 @@
 {
   "name": "redis-liveset",
   "author": "lostintime <lostintime.dev@gmail.com>",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "Apache-2.0",
   "description": "Redis LiveSet - a wrapper arround Redis Set with realtime notifications",
   "main": "dist/index.js",
