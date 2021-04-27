@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "immutable": "3.8.2",
-    "redis": "2.8.0",
+    "redis": "3.1.1",
     "redux": "4.0.1",
     "typematcher": "0.4.1"
   },
